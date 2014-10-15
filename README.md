@@ -1,5 +1,13 @@
-Razni zadaci rješeni za raèunarske kolegije
+Razni zadaci rjeÅ¡eni za raÄunarske kolegije
 na PMF-MO u Zagrebu.
 
-Autor koda: Tomislav Bukiæ
+Autor koda: Tomislav BukiÄ‡
 Zadaci: PMF-MO
+
+
+
+Various tasks solved for my collage on Faculty of science, Department
+of Mathematics in Zagreb.
+
+Code author: Tomislav BukiÄ‡
+Tasks: PMF-MO
