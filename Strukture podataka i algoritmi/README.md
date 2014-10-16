@@ -1,11 +1,11 @@
-##Domaæe zadaæe sa kolegija Strukture podataka i algoritmi.
+##DomaÄ‡e zadaÄ‡e sa kolegija Strukture podataka i algoritmi.
 
-Kod rješenja je pisan u C++.
-Tekst prvog zadatka nalazi se u fileu rješenja,
+Kod rjeÅ¡enja je pisan u C.
+Tekst prvog zadatka nalazi se u fileu rjeÅ¡enja,
 drugi zadatak sam izgubio tekst ali ide otprilike
 da unosi m, pa zatim m listi koje su razdvojene enterom,
-te ih na kraju spaja i sortira pomoæu hrpe i ispisuje
+te ih na kraju spaja i sortira pomoÄ‡u hrpe i ispisuje
 rezultat.
 
-Autor koda: Tomislav Bukiæ
+Autor koda: Tomislav BukiÄ‡
 Zadaci: PMF-MO
