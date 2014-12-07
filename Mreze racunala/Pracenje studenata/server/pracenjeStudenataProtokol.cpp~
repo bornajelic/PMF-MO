@@ -1,0 +1,145 @@
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+
+#include <iostream>
+
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <netdb.h>
+#include <netinet/in.h>
+#include <unistd.h>
+#include <arpa/inet.h>
+
+using namespace std;
+
+#include "pracenjeStudenataProtokol.h"
+
+void ispisi(const char *message, bool saljem) {
+	cout << (saljem ? "saljem" : "primam") << " poruku: '" << message << "'" << endl;
+}
+
+
+int send_message(int sock, int messageType, const char *message) {
+	
+	//priprema header:
+	
+	int	message_length		= strlen(message),
+		message_length_net	= htonl((unsigned int) message_length),
+		messageType_net		= htonl((unsigned int) messageType);
+
+	char	header[HEADER_SIZE];
+	
+	*header = messageType_net;
+	header[4] = message_length_net
+	//sprintf(header, "%d%d", messageType, message_length);
+	
+	ispisi(header, true);/////////////////////////
+	
+	//salje header:
+	
+	int 	sent_total	= 0,
+		last_sent	= 0;
+		
+	while (sent_total < HEADER_SIZE) {
+		cout << "total_sent1 (HEADER_SIZE):" << sent_total << "(" << HEADER_SIZE << ")" << endl;
+		if (
+			(last_sent = send(
+				sock,
+				header + sent_total,
+				HEADER_SIZE - sent_total,
+				0))
+			== -1
+		) {
+			return UNSUCESSFULL;
+		}
+		sent_total += last_sent;
+		cout << "total_sent2 (HEADER_SIZE):" << sent_total << "(" << HEADER_SIZE << ")" << endl;
+	}
+	
+	//salje poruku:
+	
+	sent_total	= 0;
+	last_sent	= 0;
+
+	ispisi(message, true);////////////////////////
+	
+	while (sent_total < message_length) {
+		cout << "total_sent1 (messageLength_SIZE):" << sent_total << "(" << message_length << ")" << endl;
+		if (
+			(last_sent = send(
+				sock,
+				message + sent_total,
+				message_length - sent_total,
+				0))
+			== -1
+		) {
+			return UNSUCESSFULL;
+		}
+		sent_total += last_sent;
+		cout << "total_sent2 (messageLength_SIZE):" << sent_total << "(" << message_length << ")" << endl;
+	}
+	return SUCESSFULL;
+}
+
+int receive_message(int sock, int *messageType, int *messageLength, char **message) {
+	
+	//prima header:
+	cout << "cekam poruku" << endl; ///////////////////////////////////////////
+	int 	total_received		= 0,
+		last_received		= 0;
+		
+	char	header[HEADER_SIZE];
+	
+	while (total_received < HEADER_SIZE) {
+		cout << "total_received1 (HEADER_SIZE):" << total_received << "(" << HEADER_SIZE << ")" << endl;
+		if (
+			(last_received = recv(
+				sock,
+				header + total_received,
+				HEADER_SIZE - total_received,
+				0))
+			== -1
+		) {
+			return UNSUCESSFULL;
+		}
+		total_received += last_received;
+		cout << "total_received2 (HEADER_SIZE):" << total_received << "(" << HEADER_SIZE << ")" << endl;
+	}
+	ispisi(header, false);
+	//cita i formatira podatke iz headera:
+	
+	int 	messageType_net		= (int)header[0],
+		messageLength_net	= (int)header[4];
+		
+	//sscanf(header, "%d%d", messageType, messageLength);
+	//sscanf(header, "%d%d", &messageType_net, &messageLength_net);
+	*messageType	= (int) ntohl((unsigned int) messageType_net);
+	*messageLength	= (int) ntohl((unsigned int) messageLength_net);
+	
+	//cita poruku:
+	
+	*message = (char *) malloc((*messageLength + 1)*sizeof(char));
+	
+	total_received		= 0,
+	last_received		= 0;
+	
+	while (total_received < *messageLength) {
+		cout << "total_received1 (messageLength_SIZE):" << total_received << "(" << messageLength << ")" << endl;
+		if (
+			(last_received = recv(
+				sock,
+				*message + total_received,
+				*messageLength - total_received,
+				0))
+			== -1
+		) {
+			return UNSUCESSFULL;
+		}
+		total_received += last_received;
+		cout << "total_received2 (messageLength_SIZE):" << total_received << "(" << messageLength << ")" << endl;
+	}
+	(*message)[*messageLength] = '\0';
+	ispisi(*message, false);
+	return SUCESSFULL;
+}

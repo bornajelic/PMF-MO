@@ -1,0 +1,9 @@
+#include "h_client_command_druga.h"
+
+client_command_druga::client_command() : client_command() {
+
+};
+bool client_command_druga::execute(int socket, tokenizer tokens) {
+	cout << "Bravo, bravo, radi ti i druga!" << endl;
+	return false;
+};

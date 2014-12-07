@@ -1,0 +1,101 @@
+#include "pracenjeStudenataProtokol.h"
+
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <string>
+#include <iostream>
+
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <netdb.h>
+#include <netinet/in.h>
+#include <unistd.h>
+#include <arpa/inet.h>
+
+using namespace std;
+
+static const int MAX_CONN = 10;
+
+int main(int args, char **argv) {
+	
+	//provjerava broj unesenih argumenata:
+	
+	if (args != 2) {
+		fprintf(stderr, "Koristenje: ./server port");
+		exit(0);
+	}
+	
+	//ucitava port:
+	
+	unsigned short port;
+	sscanf (argv[1], "%hu", &port);
+	if (port < 1) {
+		fprintf(stderr, "Port %hu je nedozvoljen", port);
+		exit(0);
+	}
+	
+	//inicijalizira listener socket:
+	
+	int listenerSocket = socket(PF_INET, SOCK_STREAM, 0);
+	if (listenerSocket == -1) {
+		perror("Socket");
+		exit(0);
+	}
+	
+	//bindanje i osluskivanje:
+	
+	struct sockaddr_in serverAdress;
+	serverAdress.sin_family		=	AF_INET;
+	serverAdress.sin_port		=	htons(port);
+	serverAdress.sin_addr.s_addr	=	INADDR_ANY;
+	memset(serverAdress.sin_zero, '\0', 8);
+	
+	if (
+		bind(
+			listenerSocket,
+			(struct sockaddr *) &serverAdress,
+			sizeof(serverAdress)
+		)
+		== -1
+	) {
+		perror("Bind");
+		exit(0);
+	}
+	
+	if (
+		listen(
+			listenerSocket,
+			MAX_CONN
+		)
+		== -1
+	) {
+		perror("Listen");
+		exit(0);
+	}
+	
+	//accept:
+	while(1) {
+		struct sockaddr_in	clientAdress;
+		unsigned int		clientAdressLength = sizeof(clientAdress);
+		int 			commSock = accept(
+						listenerSocket,
+						(struct sockaddr *) &clientAdress,
+						&clientAdressLength
+					);
+		if (commSock == -1) {
+			perror("Accept");
+		}
+		string client = inet_ntoa(clientAdress.sin_addr);
+		cout << "Prihvacen klijent: " << client << endl;
+		
+		
+		
+		close(commSock);
+		cout << "Klijent " << client << " je zavrsio sesiju." << endl;
+		
+	}
+	
+	close(listenerSocket);
+	return 0;
+}
