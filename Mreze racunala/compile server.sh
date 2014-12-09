@@ -1,0 +1,1 @@
+g++ pracenjeStudenataProtokol.cpp pracenjeStudenataServer.cpp data.cpp i_map_server_commands.cpp i_tokenizer.cpp i_server_core.cpp i_server_command.cpp i_server_command_bye.cpp i_server_command_update.cpp i_server_command_count.cpp i_server_command_locate.cpp i_server_command_error.cpp i_threadPool.cpp -lpthread -o server
