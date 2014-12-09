@@ -35,8 +35,8 @@ bool server_command_locate::execute(int socket, char *message) {
 	}
 	pthread_mutex_unlock(outputLock);
 	
-	
-	char *to_send;
+	int toAllocate = (classroomID > 0) ? ((int) floor(log10(classroomID)) + 2) : 2;
+	char to_send[toAllocate];
 	sprintf(to_send, "%d", classroomID);
 	send_message(socket, LOCATE, to_send);
 	

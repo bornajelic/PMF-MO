@@ -8,6 +8,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <pthread.h>
+#include <cmath>
 
 #include "pracenjeStudenataProtokol.h"
 #include "h_tokenizer.h"

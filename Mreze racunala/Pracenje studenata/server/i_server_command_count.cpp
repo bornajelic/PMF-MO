@@ -34,7 +34,8 @@ bool server_command_count::execute(int socket, char *message) {
 	cout << socket << ":COUNT (klijent br. " << socket << "): student (@" << classroom_id << ") = " << no_students << "." << endl;
 	pthread_mutex_unlock(outputLock);
 	
-	char *to_send;
+	int toAllocate = (no_students > 0) ? ((int) floor(log10(no_students)) + 2) : 2;
+	char to_send[toAllocate];
 	sprintf(to_send, "%d", no_students);
 	send_message(socket, COUNT, to_send);
 	
