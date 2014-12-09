@@ -1,2 +1,0 @@
-g++ pracenjeStudenataKlijent.cpp pracenjeStudenataProtokol.cpp i_map_client_commands.cpp i_core.cpp i_tokenizer.cpp i_client_command.cpp i_client_command_bye.cpp i_client_command_update.cpp i_client_command_count.cpp i_client_command_locate.cpp i_clientCommands.cpp i_client_command_help.cpp -o klijent
-
